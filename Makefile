@@ -1,29 +1,21 @@
-SRC_DIR = sources/
-SRC_FILES = main.c
-
-SRCS = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
+SRCS = pipex.c
 
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iincludes
-
-LIBFT = -Llibft -lft
+CFLAGS = -Wall -Wextra -Werror -I.
 
 NAME = pipex
 
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-	make -C libft
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 clean :
-	make -C libft clean
 	rm -f $(OBJS)
 
 fclean : clean
-	make -C libft fclean
 	rm -f $(NAME)
 
 re : fclean all
