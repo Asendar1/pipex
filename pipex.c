@@ -1,13 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/wait.h>
+#include "pipex.h"
 
 void	error_exit(const char *msg)
 {
 	perror(msg);
-	exit(EXIT_FAILURE);
+	exit(1);
 }
 
 void	execute_command(const char *cmd, char *const envp[])
@@ -61,7 +57,7 @@ int	main(int argc, char *argv[], char *envp[])
 		first_child_process(pipe_fd, argv, envp);
 	pid2 = fork();
 	if (pid2 < 0)
-		error_exit("fork");
+		error_exit("Error on fork");
 	if (pid2 == 0)
 		second_child_process(pipe_fd, argv, envp);
 	close(pipe_fd[0]);
