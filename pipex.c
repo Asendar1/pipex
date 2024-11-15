@@ -6,15 +6,29 @@ void	error_exit(const char *msg)
 	exit(1);
 }
 
-void	execute_command(const char *cmd, char *const envp[])
+void	execute_command(char *cmd, char *envp[])
 {
-	char *const	argv[] = {"/bin/sh", "-c", (char *)cmd, NULL};
+	char	**arr_cmd;
+	char	*path;
 
-	execve("/bin/sh", argv, envp);
-	error_exit("Error on execve");
+	arr_cmd = ft_split(cmd, ' ');
+	path = get_path(arr_cmd[0], envp);
+	if (path == NULL)
+	{
+		ft_putstr_fd("Error: command not found\n", 2);
+		free_2d_array(arr_cmd);
+		exit(1);
+	}
+	if (execve(path, arr_cmd, envp) == -1)
+	{
+		ft_putstr_fd("Error on execve\n", 2);
+		free_2d_array(arr_cmd);
+		free(path);
+		exit(1);
+	}
 }
 
-void	first_child_process(int pipe_fd[], char *cmd[], char *const envp[])
+void	first_child_process(int pipe_fd[], char *cmd[], char *envp[])
 {
 	int		fd;
 
@@ -27,7 +41,7 @@ void	first_child_process(int pipe_fd[], char *cmd[], char *const envp[])
 	execute_command(cmd[2], envp);
 }
 
-void	second_child_process(int pipe_fd[], char *cmd[], char *const envp[])
+void	second_child_process(int pipe_fd[], char *cmd[], char *envp[])
 {
 	int	fd;
 
