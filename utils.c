@@ -13,6 +13,8 @@ void	free_2d_array(char **arr)
 	free(arr);
 }
 
+// TODO: you if no infile is there the program waits, remove exit from first child, check read mode in file in first child
+
 char	*get_path(char *cmd, char *envp[])
 {
 	int		i;
@@ -23,6 +25,8 @@ char	*get_path(char *cmd, char *envp[])
 	while (ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
 	path = ft_split(envp[i] + 5, ':');
+	if(!path)
+		error_exit("Error On split\n function returned NULL");
 	i = 0;
 	while (path[i])
 	{

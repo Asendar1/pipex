@@ -33,6 +33,8 @@ void	first_child_process(int pipe_fd[], char *cmd[], char *envp[])
 	int		fd;
 
 	fd = open(cmd[1], O_RDONLY);
+	if (!fd)
+		error_exit("Error on open()");
 	dup2(fd, 0);
 	dup2(pipe_fd[1], 1);
 	close(pipe_fd[0]);
@@ -46,6 +48,8 @@ void	second_child_process(int pipe_fd[], char *cmd[], char *envp[])
 	int	fd;
 
 	fd = open(cmd[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (!fd)
+		error_exit("Error on open()");
 	dup2(pipe_fd[0], 0);
 	dup2(fd, 1);
 	close(pipe_fd[1]);

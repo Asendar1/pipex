@@ -14,5 +14,6 @@
 
 char	*get_path(char *cmd, char *envp[]);
 void	free_2d_array(char **arr);
+void	error_exit(const char *msg);
 
 #endif
