@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hassende <hassende@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/18 13:29:08 by hassende          #+#    #+#             */
+/*   Updated: 2024/11/18 13:38:39 by hassende         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 void	error_exit(const char *msg)
@@ -12,6 +24,8 @@ void	execute_command(char *cmd, char *envp[])
 	char	*path;
 
 	arr_cmd = ft_split(cmd, ' ');
+	if (!arr_cmd)
+		return ;
 	path = get_path(arr_cmd[0], envp);
 	if (path == NULL)
 	{
@@ -32,6 +46,8 @@ void	first_child_process(int pipe_fd[], char *cmd[], char *envp[])
 {
 	int		fd;
 
+	if (access(cmd[1], R_OK) == -1)
+		return ;
 	fd = open(cmd[1], O_RDONLY);
 	if (!fd)
 		error_exit("Error on open()");
