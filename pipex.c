@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hassende <hassende@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamzah <hamzah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 13:29:08 by hassende          #+#    #+#             */
-/*   Updated: 2024/11/18 13:38:39 by hassende         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:47:19 by hamzah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	execute_command(char *cmd, char *envp[])
 
 	arr_cmd = ft_split(cmd, ' ');
 	if (!arr_cmd)
-		return ;
+		error_exit(cmd);
 	path = get_path(arr_cmd[0], envp);
 	if (path == NULL)
 	{
@@ -47,9 +47,9 @@ void	first_child_process(int pipe_fd[], char *cmd[], char *envp[])
 	int		fd;
 
 	if (access(cmd[1], R_OK) == -1)
-		return ;
+		error_exit("Error: file1 not Readable");
 	fd = open(cmd[1], O_RDONLY);
-	if (!fd)
+	if (fd == -1)
 		error_exit("Error on open()");
 	dup2(fd, 0);
 	dup2(pipe_fd[1], 1);
@@ -64,8 +64,8 @@ void	second_child_process(int pipe_fd[], char *cmd[], char *envp[])
 	int	fd;
 
 	fd = open(cmd[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (!fd)
-		error_exit("Error on open()");
+	if (fd == -1)
+		error_exit(cmd[4]);
 	dup2(pipe_fd[0], 0);
 	dup2(fd, 1);
 	close(pipe_fd[1]);
@@ -81,7 +81,10 @@ int	main(int argc, char *argv[], char *envp[])
 	pid_t	pid2;
 
 	if (argc != 5)
-		error_exit("Usage: ./pipex file1 cmd1 cmd2 file2");
+	{
+		ft_putendl_fd("Usage: ./pipex file1 cmd1 cmd2 file2", 2);
+		return (1);
+	}
 	if (pipe(pipe_fd) < 0)
 		error_exit("Error on pipe");
 	pid1 = fork();
@@ -96,7 +99,7 @@ int	main(int argc, char *argv[], char *envp[])
 		second_child_process(pipe_fd, argv, envp);
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	waitpid(0, NULL, 0);
+	waitpid(0, NULL, 0);
 	return (0);
 }

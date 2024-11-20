@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hassende <hassende@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamzah <hamzah@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 13:29:12 by hassende          #+#    #+#             */
-/*   Updated: 2024/11/18 13:35:51 by hassende         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:27:27 by hamzah           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ char	*get_path(char *cmd, char *envp[])
 	char	*path_str;
 
 	i = 0;
+	if ((access(cmd, F_OK) && access(cmd, X_OK)) == 0)
+		return (cmd);
 	while (ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
 	path = ft_split(envp[i] + 5, ':');
